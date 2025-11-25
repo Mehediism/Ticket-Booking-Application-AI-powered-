@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Bus, Ticket, MessageCircle } from 'lucide-react';
+import { Bus, Ticket, MessageCircle, Building2 } from 'lucide-react';
 import SearchBuses from './components/SearchBuses';
 import MyBookings from './components/MyBookings';
 import ChatAssistant from './components/ChatAssistant';
+import BusProviders from './components/BusProviders';
 
-type TabType = 'search' | 'bookings' | 'chat';
+type TabType = 'search' | 'bookings' | 'chat' | 'providers';
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('search');
@@ -28,36 +29,43 @@ function App() {
           <div className="flex gap-1">
             <button
               onClick={() => setActiveTab('search')}
-              className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${
-                activeTab === 'search'
-                  ? 'text-blue-600 border-blue-600'
-                  : 'text-gray-600 border-transparent hover:text-gray-800'
-              }`}
+              className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'search'
+                ? 'text-blue-600 border-blue-600'
+                : 'text-gray-600 border-transparent hover:text-gray-800'
+                }`}
             >
               <Bus size={20} />
               Search Buses
             </button>
             <button
               onClick={() => setActiveTab('bookings')}
-              className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${
-                activeTab === 'bookings'
-                  ? 'text-blue-600 border-blue-600'
-                  : 'text-gray-600 border-transparent hover:text-gray-800'
-              }`}
+              className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'bookings'
+                ? 'text-blue-600 border-blue-600'
+                : 'text-gray-600 border-transparent hover:text-gray-800'
+                }`}
             >
               <Ticket size={20} />
               My Bookings
             </button>
             <button
               onClick={() => setActiveTab('chat')}
-              className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${
-                activeTab === 'chat'
-                  ? 'text-blue-600 border-blue-600'
-                  : 'text-gray-600 border-transparent hover:text-gray-800'
-              }`}
+              className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'chat'
+                ? 'text-blue-600 border-blue-600'
+                : 'text-gray-600 border-transparent hover:text-gray-800'
+                }`}
             >
               <MessageCircle size={20} />
               AI Assistant
+            </button>
+            <button
+              onClick={() => setActiveTab('providers')}
+              className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'providers'
+                ? 'text-blue-600 border-blue-600'
+                : 'text-gray-600 border-transparent hover:text-gray-800'
+                }`}
+            >
+              <Building2 size={20} />
+              Bus Providers
             </button>
           </div>
         </div>
@@ -67,6 +75,7 @@ function App() {
         {activeTab === 'search' && <SearchBuses />}
         {activeTab === 'bookings' && <MyBookings />}
         {activeTab === 'chat' && <ChatAssistant />}
+        {activeTab === 'providers' && <BusProviders />}
       </main>
 
       <footer className="bg-white border-t mt-12">

@@ -124,6 +124,26 @@ def get_bus_providers():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/bus-providers/{provider_name}")
+def get_provider_details(provider_name: str):
+    try:
+        details = bus_controller.get_provider_details(provider_name)
+        if not details:
+            raise HTTPException(status_code=404, detail="Provider not found")
+        return details
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/bus-providers/district/{district_name}")
+def get_providers_by_district(district_name: str):
+    try:
+        providers = bus_controller.get_providers_by_district(district_name)
+        return {"providers": providers}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/chat")
 def chat(request: ChatRequest):
     try:

@@ -61,3 +61,19 @@ export const sendChatMessage = async (message: string) => {
   });
   return response.json();
 };
+
+export const getBusProviders = async () => {
+  const response = await fetch(`${API_URL}/bus-providers`);
+  return response.json();
+};
+
+export const getProviderDetails = async (providerName: string) => {
+  const response = await fetch(`${API_URL}/bus-providers/${encodeURIComponent(providerName)}`);
+  return response.json();
+};
+
+export const getProvidersByDistrict = async (districtName: string) => {
+  const response = await fetch(`${API_URL}/bus-providers/district/${encodeURIComponent(districtName)}`);
+  return response.json();
+};
+

@@ -4,13 +4,30 @@ export interface District {
   created_at: string;
 }
 
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export interface BusProvider {
-  id: string;
+  id: number;
+  name: string;
+}
+
+export interface ProviderDetails {
+  id: number;
   name: string;
   contact_info: string;
   address: string;
   privacy_policy: string;
-  created_at: string;
+  website: string;
+  coverage_districts: string[];
+  routes: {
+    [key: string]: {
+      dropping_point: string;
+      price: number;
+    }[];
+  };
 }
 
 export interface SearchResult {

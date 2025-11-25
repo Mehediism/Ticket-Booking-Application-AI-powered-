@@ -39,3 +39,13 @@ class BusController:
     @staticmethod
     def get_all_providers():
         return BusProvider.get_all()
+
+    @staticmethod
+    def get_provider_details(provider_name):
+        """Get detailed information about a specific provider"""
+        return BusProvider.get_provider_details(provider_name)
+
+    @staticmethod
+    def get_providers_by_district(district_name):
+        """Get all providers serving a specific district"""
+        return BusProvider.get_providers_serving_district(district_name)

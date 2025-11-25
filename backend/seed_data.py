@@ -16,7 +16,9 @@ def seed_database():
 
     print("Starting database seeding...")
 
-    with open('data/data.json', 'r') as f:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(base_dir, 'data', 'data.json')
+    with open(data_path, 'r') as f:
         data = json.load(f)
 
     print("Seeding districts and dropping points...")
@@ -35,20 +37,33 @@ def seed_database():
                 district_id = district_obj['id']
 
     print("\nSeeding bus providers and routes...")
-    provider_files = {
-        "Desh Travel": "bus_info/desh travel.txt",
-        "Ena": "bus_info/ena.txt",
-        "Green Line": "bus_info/green line.txt"
-    }
+    
+    # Dynamically load provider files
+    provider_files = {}
+    bus_info_dir = os.path.join(base_dir, 'bus_info')
+    if os.path.exists(bus_info_dir):
+        for filename in os.listdir(bus_info_dir):
+            if filename.endswith('.txt'):
+                # key is the filename without extension, e.g. "hanif"
+                provider_key = filename[:-4].lower() 
+                provider_files[provider_key] = os.path.join(bus_info_dir, filename)
+    else:
+        print(f"Warning: {bus_info_dir} directory not found!")
+
 
     for provider in data['bus_providers']:
         try:
             contact_info = ""
             address = ""
             privacy_policy = ""
-
-            if provider['name'] in provider_files:
-                with open(provider_files[provider['name']], 'r') as f:
+            
+            # Match provider name case-insensitively
+            provider_name_lower = provider['name'].lower()
+            
+            if provider_name_lower in provider_files:
+                file_path = provider_files[provider_name_lower]
+                print(f"  - Reading info from {file_path}")
+                with open(file_path, 'r') as f:
                     content = f.read()
                     privacy_policy = content
 
@@ -57,6 +72,8 @@ def seed_database():
                             contact_info = line.replace('Contact Information:', '').strip()
                         if 'Official Address:' in line:
                             address = line.replace('Official Address:', '').strip()
+            else:
+                print(f"  - No info file found for {provider['name']}")
 
             provider_id = BusProvider.create(
                 provider['name'],
@@ -75,14 +92,16 @@ def seed_database():
             print(f"Provider {provider['name']} may already exist: {e}")
 
     print("\nSeeding bus documents for RAG...")
-    for provider_name, file_path in provider_files.items():
+    for provider_key, file_path in provider_files.items():
         try:
+            # Use the key (filename) as provider name or try to format it nicely
+            provider_name = provider_key.title() 
             with open(file_path, 'r') as f:
                 content = f.read()
                 BusDocument.create(provider_name, content)
                 print(f"Created document for: {provider_name}")
         except Exception as e:
-            print(f"Document for {provider_name} may already exist: {e}")
+            print(f"Document for {provider_key} may already exist: {e}")
 
     print("\nDatabase seeding completed!")
     print("\nNote: If you see 'already exists' messages, that's normal for re-runs.")
